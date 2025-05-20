@@ -1,11 +1,9 @@
 ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴
 ╴╴╴╴╴Automatización Archivo Contracargos╴╴╴╴╴
 ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴
-
-[![Latest Release](https://img.shields.io/github/v/release/frumirin/AutomatizacionDeContracargos?label=latest)](https://github.com/frumirin/AutomatizacionDeContracargos/releases)
-
-
 ¡Buenas! Este script busca automatizar el proceso de scrapear la dato de los documentos de paywyay para analizar los contracargos.
+
+[![Descargar EXE](https://img.shields.io/github/v/release/frumirin/AutomatizacionDeContracargos?label=Descargar%20EXE&style=flat-square&color=%23eb65c2)](https://github.com/frumirin/AutomatizacionDeContracargos/releases)
 
 ╴╴╴╴╴Instalación
 1. Descargar el archivo . exe y moverlo a la carpeta de destino de los archivos PDF que necesitemos procesar.
