@@ -2,6 +2,9 @@
 ╴╴╴╴╴Automatización Archivo Contracargos╴╴╴╴╴
 ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴
 
+[![Latest Release](https://img.shields.io/github/v/release/frumirin/AutomatizacionDeContracargos?label=latest)](https://github.com/frumirin/AutomatizacionDeContracargos/releases)
+
+
 ¡Buenas! Este script busca automatizar el proceso de scrapear la dato de los documentos de paywyay para analizar los contracargos.
 
 ╴╴╴╴╴Instalación
