@@ -115,6 +115,10 @@ for pdf in pdfs:
     except Exception as e:
         print('error')
 
+
+#cleans l_importe to delete $ and empty spaces
+l_importe = [valor.replace('$','').strip() for valor in l_importe]
+
 #logs to check all values are correctly registered
 print(l_tarjeta)
 print(l_ticket)
