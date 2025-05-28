@@ -1,8 +1,35 @@
 import os
 import sys
+import shutil
+import tkinter as tk
+from tkinter import messagebox
+import webbrowser
 import camelot
 import matplotlib.pyplot as plt
 import pandas as pd
+
+#--------------------------------
+
+def check_ghostscript():
+    return shutil.which("gswin64c") or shutil.which("gswin32c") or shutil.which("gs")
+
+if not check_ghostscript():
+    # Crear ventana oculta de Tkinter (para evitar ventana vacía)
+    root = tk.Tk()
+    root.withdraw()
+
+    # Mensaje con botón
+    respuesta = messagebox.askyesno(
+        title="Ghostscript no encontrado",
+        message="Ghostscript es necesario para leer PDFs.\n¿Querés abrir la página de descarga ahora?\n\n(Versión sugerida:GNU Affero General Public License, Windows x64 bit)"
+    )
+
+    if respuesta:
+        webbrowser.open("https://www.ghostscript.com/download/gsdnld.html")
+
+    sys.exit(1)
+
+#--------------------------------
 
 #looks for directory the script/.exe is in, thanks chatgpt
 if getattr(sys, 'frozen', False):

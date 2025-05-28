@@ -14,3 +14,7 @@ Al ejecutar el ejecutable una pestaña de cmd debería aparecer, procederá a re
 Los archivos PDF DEBEN estar en la misma carpeta donde está el ejecutable, si no no podrá encontrarlos.
 Creará el .xlsx dentro de la misma carpeta.
 Si el archivo xlsx está abierto no podrá modificarlo, necesita estar cerrado antes de podes empezar a procesar.
+
+## Troubleshoot
+Se necesita el programa GhostScript para poder correr este programa. Se puede instalar desde aquí:
+[Descargar GhostScript](https://ghostscript.com/releases/gsdnld.html)
