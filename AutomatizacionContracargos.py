@@ -1,13 +1,20 @@
+#--------------------------------
+print('Comenzando proceso...')
+#--------------------------------
+
 import os
 import sys
 import shutil
+import webbrowser
 import tkinter as tk
 from tkinter import messagebox
-import webbrowser
+import contextlib
 import camelot
-import matplotlib.pyplot as plt
 import pandas as pd
+#import matplotlib.pyplot as plt
 
+#--------------------------------
+print('Comenzando proceso...')
 #--------------------------------
 
 def check_ghostscript():
@@ -57,58 +64,63 @@ l_fechaDeb = []
 l_importe = []
 l_fechaLiq = []
 l_establecimiento = []
+l_blacklist = ['Fecha de Débito','Pesos','Liq.','Tarjeta']
+
 
 #for loop to iterate over each pdf
 for pdf in pdfs:
+    print('Procesando: ', pdf)
+    
     try:
-        detalles_table = camelot.read_pdf(
-            pdf,
-            flavor='stream',
-            table_areas=['8,670,550,570'],
-            row_tol=5
-            )
-        #camelot.plot(detalles_table[0], kind = 'contour')
-        #plt.show()
-        #just to check
-        
-        resumen_table = camelot.read_pdf(
-            pdf,
-            flavor='stream',
-            table_areas=['360,990,580,850'],
-            row_tol=8
-            )
-        #camelot.plot(resumen_table[0], kind = 'contour')
-        #plt.show()
-        #just to check
-        
+        with open(os.devnull, 'w') as fnull:
+            with contextlib.redirect_stdout(fnull), contextlib.redirect_stderr(fnull):            detalles_table = camelot.read_pdf(
+                pdf,
+                flavor='stream',
+                table_areas=['8,670,550,50'],
+                row_tol=5
+                )
+            #camelot.plot(detalles_table[0], kind = 'contour')
+            #plt.show()
+            #just to check
+        with open(os.devnull, 'w') as fnull:
+            with contextlib.redirect_stdout(fnull), contextlib.redirect_stderr(fnull):            resumen_table = camelot.read_pdf(
+                pdf,
+                flavor='stream',
+                table_areas=['360,990,580,850'],
+                row_tol=8
+                )
+            #camelot.plot(resumen_table[0], kind = 'contour')
+            #plt.show()
+            #just to check
         #turn the table list from camelot to panda dataframe for easy processing
         detdf = detalles_table[0].df
         resdf = resumen_table[0].df
-        
-        print("--------TABLA DETALLES:--------","\n", detdf)
-        print("--------TABLA RESUMEN:--------","\n", resdf)
-        
+        #print("--------TABLA DETALLES:--------","\n", detdf)
+        #print("--------TABLA RESUMEN:--------","\n", resdf)
         for index, row in detdf.iloc[7:].iterrows():
-            
-            #detalles table
+            if any(str(item).strip().lower().startswith(bl.lower()) for item in row for bl in l_blacklist):
+                continue 
+                       
+            #go to detalles table
             tarjeta = row[0]
             fechaTrans = row[2]
-           
             
             #fechaDeb might shift columns but not rows
             fechaDeb = detdf.iloc[3,1]
             if fechaDeb == '':
                 fechaDeb = detdf.iloc[3,2]
-
+            
             #importe might shift columns but not rows, i'm sorry this is the best i could think of
             importe = row[3]
-            if '/' in importe:
-                importe = row[6]
-                print("-------------------","\n","importe se movió a [6]","\n","-------------------")
-            if '-' in importe:
-                importe = row [5]
-                print("-------------------","\n","importe se movió a [5]","\n","-------------------")
-           
+            try:
+                if '/' in importe:
+                    importe = row[6]
+                    #print("-------------------","\n","importe se movió a [6]",)
+                if '-' in importe:
+                    importe = row [5]
+                    #print("-------------------","\n","importe se movió a [5]")
+            except Exception as e:
+                importe = row[4]
            
             #ticket and codigo are tricky because of positioning
             try:
@@ -117,16 +129,14 @@ for pdf in pdfs:
             except Exception as e:
                 ticket = row[1]
                 codigo = row[2]
-                fechaTrans = row[3]                
-                
-                
+                fechaTrans = row[3]
+
+            
             #append to list
             l_tarjeta.append(tarjeta)
             l_fechaTrans.append(fechaTrans)
-
             l_fechaDeb.append(fechaDeb)
             l_importe.append(importe)
-
             l_ticket.append(ticket)        
             l_codigo.append(codigo)
 
@@ -137,27 +147,16 @@ for pdf in pdfs:
             fechaLiq = resdf.iloc[2,1]
             #append to list
             l_fechaLiq.append(fechaLiq)
-            l_establecimiento.append(establecimiento)
-        
+            l_establecimiento.append(establecimiento)           
+        print(pdf,' finalizado!')
+
     except Exception as e:
-        print('error')
-
-
+            print('error con:', pdf)
+    
 #cleans l_importe to delete $ and empty spaces
 l_importe = [valor.replace('$','').strip() for valor in l_importe]
 
-#logs to check all values are correctly registered
-print(l_tarjeta)
-print(l_ticket)
-print(l_codigo)
-print(l_fechaTrans)
-print(l_fechaDeb)
-print(l_importe)
-print(l_fechaLiq)
-print(l_establecimiento)
-
-
- #actual database with all columns
+#actual database with all columns
 columnsContracargos = ['Tarjeta', 'Ticket', 'Codigo', 'Fecha (Transf.)', 'Fecha (Deb.)', 'Importe', 'Fecha Liquidación', 'Establecimiento']
 contracargosDF = pd.DataFrame({
     'Tarjeta': l_tarjeta,
